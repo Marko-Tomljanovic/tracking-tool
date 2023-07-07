@@ -1,6 +1,4 @@
-# Getting Started with Create React App
-
-Devōt Challenge
+# Devōt Challenge
 
 ## Available Scripts
 
