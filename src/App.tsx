@@ -1,11 +1,16 @@
 import React from "react";
 import "./App.css";
 import { Button } from "primereact/button";
+import Layout from "./layout/Layout";
 
 function App() {
   return (
     <div className="App">
-      <Button label="marko" className="p-button-secondary" />
+      <Layout>
+        <div>
+          <Button label="marko" />
+        </div>
+      </Layout>
     </div>
   );
 }

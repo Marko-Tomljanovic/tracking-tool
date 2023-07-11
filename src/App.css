@@ -40,3 +40,46 @@
     transform: rotate(360deg);
   }
 }
+
+.marko .p-menuitem-link {
+  justify-content: flex-end;
+  border-bottom: 5px solid #c4c5d7 !important;
+}
+.marko .p-menuitem-link-active {
+  border-bottom: 10px solid blue !important;
+}
+
+.marko .p-menuitem-text {
+  padding-bottom: 31px;
+  margin-top: 31px;
+  margin-right: 50px;
+}
+
+.marko .p-menuitem-icon {
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+.marko .p-tabmenu-nav,
+.custom-tab-menu .p-tabmenu-nav {
+  background-color: blue;
+}
+
+.custom-tab-menu .p-tabmenu-nav .p-tabmenuitem.p-highlight {
+  background-color: red;
+}
+
+.custom-tab-menu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-text {
+  color: rgb(149, 89, 89);
+}
+
+.custom-menubar .p-menuitem-active .p-menuitem-text {
+  border-bottom: 2px solid blue;
+  /* Add any other desired styles for the text */
+}
+
+.custom-menubar .p-menuitem-active .p-menuitem-icon {
+  /* Add any desired styles for the icon */
+  border-bottom: 2px red !important;
+  padding-bottom: 2px !important;
+}
