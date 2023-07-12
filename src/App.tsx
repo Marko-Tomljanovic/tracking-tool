@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
-import { Button } from "primereact/button";
+import Trackers from "./components/views/Trackers";
 import Layout from "./layout/Layout";
+import { useData } from "./components/useData";
 
 function App() {
+  const { activeTab }: { activeTab: any } = useData();
+
+  useEffect(() => {
+    console.log(activeTab);
+  }, [activeTab]);
   return (
-    <div className="App">
+    <div>
       <Layout>
-        <div>
-          <Button label="marko" />
-        </div>
+        <Trackers />
       </Layout>
     </div>
   );
