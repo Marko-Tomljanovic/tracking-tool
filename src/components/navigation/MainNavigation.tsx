@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Menubar } from "primereact/menubar";
 import { Button } from "primereact/button";
-import devotLogo from "../devotLogo";
+import devotLogo from "../../assets/devotLogo";
 import { useData } from "../useData";
 
 const MainNavigation = ({ children }: any) => {

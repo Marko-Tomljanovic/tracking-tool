@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import Trackers from "./components/views/Trackers";
+import Login from "./components/views/Login";
+import History from "./components/views/History";
 import Layout from "./layout/Layout";
 import { useData } from "./components/useData";
 
