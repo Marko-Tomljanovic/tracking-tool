@@ -1,4 +1,10 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/216f3c6e-bffb-4f7d-b835-febaad1bcbca/deploy-status)](https://app.netlify.com/sites/tracking-tool/deploys)
+
 # Devōt Challenge
+
+## Tracking Tool
+
+[Netlify deploy tracking tool](https://tracking-tool.netlify.app/)
 
 ## Available Scripts
 
