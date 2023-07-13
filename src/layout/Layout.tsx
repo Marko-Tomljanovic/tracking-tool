@@ -15,8 +15,6 @@ const Layout = ({ children }: any) => {
     <React.Fragment>
       <div>
         <MainNavigation />
-        {/* <Sides/>
-            <Backdrop/> */}
       </div>
       <main>{children}</main>
     </React.Fragment>

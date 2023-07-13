@@ -2,22 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Card } from "primereact/card";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
-export const Login = () => {
+export const Register = () => {
   const [email, setEmail] = useState<any>("");
   const [password, setPassword] = useState<any>("");
+  const [rePassword, setRePassword] = useState<any>("");
   const auth = getAuth();
-  const navigate = useNavigate();
 
   const handleSubmit = () => {
-    signInWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
         console.log(user);
-        navigate("/trackers");
 
         // ...
       })
@@ -47,7 +45,7 @@ export const Login = () => {
         <Card
           style={{
             width: "400px",
-            height: "370px",
+            height: "400px",
             textAlign: "center",
             boxShadow: "none",
             backgroundColor: "#ECEDF5",
@@ -61,20 +59,19 @@ export const Login = () => {
               fontWeight: "700",
             }}
           >
-            Login
+            Register
           </div>
           <div className="flex flex-wrap justify-content-center align-items-center gap-2">
             <InputText
-              id="username"
+              id="email"
               value={email}
               style={{ width: "330px" }}
-              placeholder="Username"
+              placeholder="Email"
               type="text"
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <br />
-
           <div className="flex flex-wrap justify-content-center align-items-center gap-2">
             <InputText
               id="password"
@@ -86,9 +83,21 @@ export const Login = () => {
             />
           </div>
           <br />
+          <div className="flex flex-wrap justify-content-center align-items-center gap-2">
+            <InputText
+              id="Password"
+              value={rePassword}
+              style={{ width: "330px" }}
+              placeholder="Repeat Password"
+              type="password"
+              onChange={(e) => setRePassword(e.target.value)}
+            />
+          </div>
+
+          <br />
           <br />
           <Button
-            label="Login"
+            label="Register"
             style={{ width: "330px" }}
             onClick={handleSubmit}
           ></Button>
@@ -119,10 +128,10 @@ export const Login = () => {
               marginLeft: "20px",
             }}
           ></i>
-          <div style={{ textAlign: "center", marginTop: "-70px" }}>
-            Need an account? <br />
-            <a style={{ color: "#FF5722" }} href={"/register"}>
-              Register here
+          <div style={{ textAlign: "right", marginTop: "-70px" }}>
+            You already have an account? <br />
+            <a style={{ color: "#FF5722" }} href={"/login"}>
+              Back to Login
             </a>
             <a></a>
           </div>
@@ -132,4 +141,4 @@ export const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

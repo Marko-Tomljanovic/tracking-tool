@@ -56,12 +56,14 @@ export const History = () => {
   };
   const [data, setData] = useState([
     {
-      timeLogged: "324432543543",
+      date: "25.02.2022",
       description: "nesto dfrugo dsffd",
+      timeTracked: "05:02:23",
     },
     {
-      timeLogged: "76767676767",
-      description: "fsfsdfdsf",
+      date: "20.02.2022",
+      description: "dfrugo dsffd",
+      timeTracked: "03:02:23",
     },
   ]);
   const [filters, setFilters] = useState<DataTableFilterMeta>(defaultFilters);
@@ -142,12 +144,13 @@ export const History = () => {
           rows={5}
           showGridlines
           filters={filters}
-          globalFilterFields={["timeLogged", "description"]}
+          globalFilterFields={["date", "description", "timeTracked"]}
           tableStyle={{ minWidth: "50rem" }}
           paginatorClassName="custom-paginator"
         >
-          <Column field="timeLogged" header="Time logged"></Column>
+          <Column field="date" header="Date"></Column>
           <Column field="description" header="Description"></Column>
+          <Column field="timeTracked" header="Time tracker"></Column>
           <Column header="Action" body={actionTemplate}></Column>
         </DataTable>
       </div>
