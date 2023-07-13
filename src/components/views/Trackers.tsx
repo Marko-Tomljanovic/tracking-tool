@@ -7,12 +7,9 @@ import { firestore } from "../../firebase.js";
 import {
   collection,
   getDocs,
-  setDoc,
-  doc,
   updateDoc,
   query,
   where,
-  onSnapshot,
   addDoc,
   deleteDoc,
 } from "firebase/firestore";
@@ -30,20 +27,31 @@ export const Trackers = () => {
     dataRow: {},
   });
   const [data, setData] = useState<any>();
+  const moment = require("moment");
+  moment.locale("hr");
 
   useEffect(() => {
     getTrackers();
   }, [time]);
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
     if (isRunning.is) {
       setStopwatch(isRunning.dataRow);
     }
   }, [time, isRunning.is]);
+
+  useEffect(() => {
+    let intervalId: any;
+
+    if (isRunning.is) {
+      intervalId = setInterval(() => {
+        setTime((prevTime: any) => prevTime + 1);
+      }, 1000);
+    }
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isRunning.is]);
 
   const setStopwatch = async (dataRow: any) => {
     try {
@@ -61,9 +69,6 @@ export const Trackers = () => {
       console.error("Error adding document: ", e);
     }
   };
-
-  const moment = require("moment");
-  moment.locale("hr");
 
   const getTrackers = async () => {
     let tempData: any = [];
@@ -213,9 +218,6 @@ export const Trackers = () => {
   };
 
   const actionTemplate = (rowData: any) => {
-    console.log("marko", rowData);
-    console.log("isSele", isRunning);
-
     const isSelectedRow = rowData.key === isRunning.dataRow.key;
     return (
       <React.Fragment>
@@ -264,23 +266,6 @@ export const Trackers = () => {
       </React.Fragment>
     );
   };
-
-  useEffect(() => {
-    let intervalId: any;
-
-    if (isRunning.is) {
-      intervalId = setInterval(() => {
-        // setTime((prevTime) => prevTime + 1);
-        console.log("isRunning", isRunning.dataRow);
-
-        setTime((prevTime: any) => prevTime + 1);
-      }, 1000);
-    }
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [isRunning.is]);
 
   const textEditor = (options: any) => {
     return (
