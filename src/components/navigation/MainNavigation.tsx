@@ -1,25 +1,35 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Menubar } from "primereact/menubar";
 import { Button } from "primereact/button";
 import devotLogo from "../../assets/devotLogo";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
+import { Toast } from "primereact/toast";
 
 const MainNavigation = ({ children }: any) => {
   const navigate = useNavigate();
   const location = useLocation().pathname;
-
+  const toast = useRef<Toast>(null);
   const auth = getAuth();
 
   const hanndleLogout = () => {
     signOut(auth)
       .then(() => {
+        showInfo();
         navigate("/login");
       })
       .catch((error) => {
-        // An error happened.
+        alert(error);
       });
+  };
+  const showInfo = () => {
+    toast.current?.show({
+      severity: "info",
+      summary: "Info",
+      detail: "You have been successfully logged out",
+      life: 4050,
+    });
   };
 
   const end = !(
@@ -59,6 +69,7 @@ const MainNavigation = ({ children }: any) => {
   );
   return (
     <div>
+      <Toast ref={toast} position="bottom-left" />
       <Menubar start={devotLogo} end={end} />
     </div>
   );

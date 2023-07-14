@@ -1,26 +1,23 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { Routes, Route, redirect } from "react-router-dom";
-
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Trackers from "./components/views/Trackers";
 import Login from "./components/views/Login";
 import History from "./components/views/History";
 import Register from "./components/views/Register";
 import Layout from "./layout/Layout";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
   const location = useLocation().pathname;
   const auth = getAuth();
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
-        console.log(uid);
         setIsAuthenticated(true);
         if (location.includes("login") || location.includes("register")) {
           navigate("/trackers");

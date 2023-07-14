@@ -1,4 +1,4 @@
-import { firestore } from "../firebase.js";
+import { firestore } from "..//firebase.js";
 import {
   collection,
   getDocs,
@@ -30,8 +30,6 @@ export const editRow = async (dataRow: any) => {
 };
 
 export const stopRow = async (dataRow: any) => {
-  console.log("dataRow", dataRow);
-
   try {
     const q = query(
       collection(firestore, "trackers"),

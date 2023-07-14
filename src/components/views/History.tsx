@@ -6,6 +6,7 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import { useTrackers } from "../../helpers/useTrackers";
+import "moment/locale/hr";
 
 const defaultFilters: DataTableFilterMeta = {
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -25,10 +26,22 @@ const defaultFilters: DataTableFilterMeta = {
 };
 
 export const History = () => {
+  const [filters, setFilters] = useState<DataTableFilterMeta>(defaultFilters);
+  const [globalFilterValue, setGlobalFilterValue] = useState<string>("");
+  const [dates, setDates] = useState({
+    selectedDate1: null,
+    selectedDate2: null,
+  });
   const { data, getTrackers, handleEdit, handleDelete } = useTrackers();
+  const moment = require("moment");
+  moment.locale("hr");
   useEffect(() => {
     getTrackers();
   }, []);
+
+  useEffect(() => {
+    filterObjects();
+  }, [dates]);
 
   const actionTemplate = (rowData: any) => {
     return (
@@ -43,9 +56,6 @@ export const History = () => {
       </React.Fragment>
     );
   };
-  const [filters, setFilters] = useState<DataTableFilterMeta>(defaultFilters);
-  const [globalFilterValue, setGlobalFilterValue] = useState<string>("");
-  const [selectedDate, setSelectedDate] = useState(null);
 
   const initFilters = () => {
     setFilters(defaultFilters);
@@ -72,6 +82,16 @@ export const History = () => {
     );
   };
 
+  const filterObjects = () => {
+    const filteredData = data?.filter((obj: any) =>
+      moment(moment(obj.date).format("YYYY-MM-DD")).isBetween(
+        moment(dates.selectedDate1).format("YYYY-MM-DD"),
+        moment(dates.selectedDate2).format("YYYY-MM-DD")
+      )
+    );
+    console.log(filteredData);
+  };
+
   return (
     <div style={{ margin: "5% 10% 0%" }}>
       <div
@@ -94,18 +114,23 @@ export const History = () => {
         <span>
           <Calendar
             locale="en"
-            value={selectedDate}
+            value={dates.selectedDate1}
             showIcon
-            onChange={(e: any) => setSelectedDate(e.value)}
+            onChange={(e: any) =>
+              setDates({ ...dates, selectedDate1: e.value })
+            }
             dateFormat="dd/mm/yy"
+            style={{ marginRight: "30px" }}
           />
         </span>
         <span>
           <Calendar
             locale="en"
-            value={selectedDate}
+            value={dates.selectedDate2}
             showIcon
-            onChange={(e: any) => setSelectedDate(e.value)}
+            onChange={(e: any) =>
+              setDates({ ...dates, selectedDate2: e.value })
+            }
             dateFormat="dd/mm/yy"
           />
         </span>
@@ -154,7 +179,7 @@ export const History = () => {
           <Column
             header={"Action"}
             body={actionTemplate}
-            style={{ width: "60px" }}
+            style={{ width: "60px", textAlign: "right" }}
           ></Column>
           <Column rowEditor style={{ width: "60px" }}></Column>
         </DataTable>

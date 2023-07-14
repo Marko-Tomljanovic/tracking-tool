@@ -1,32 +1,38 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Card } from "primereact/card";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { Toast } from "primereact/toast";
 
 export const Register = () => {
   const [email, setEmail] = useState<any>("");
   const [password, setPassword] = useState<any>("");
   const [rePassword, setRePassword] = useState<any>("");
   const auth = getAuth();
+  const toast = useRef<Toast>(null);
 
   const handleSubmit = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
+        showInfo();
         const user = userCredential.user;
-        console.log(user);
-
-        // ...
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode);
         console.log(errorMessage);
-
-        // ..
       });
+  };
+  const showInfo = () => {
+    toast.current?.show({
+      severity: "success",
+      summary: "Success",
+      detail: "Message Content",
+      life: 4000,
+    });
   };
 
   return (

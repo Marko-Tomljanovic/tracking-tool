@@ -110,6 +110,7 @@ export const useTrackers = () => {
         console.log(e);
       });
   };
+
   return {
     data,
     getTrackers,

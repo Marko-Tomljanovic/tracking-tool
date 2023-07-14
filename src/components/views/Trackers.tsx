@@ -157,15 +157,16 @@ export const Trackers = () => {
               header="Description"
               editor={(options) => textEditor(options)}
             ></Column>
+
             <Column
               rowEditor
               headerStyle={{}}
-              bodyStyle={{ textAlign: "center" }}
+              bodyStyle={{ textAlign: "right" }}
             ></Column>
             <Column
               header="Action"
               body={actionTemplate}
-              style={{ width: "200px" }}
+              style={{ width: "120px" }}
             ></Column>
           </DataTable>
         </div>
