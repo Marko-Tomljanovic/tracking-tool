@@ -5,70 +5,48 @@ import { Column } from "primereact/column";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
+import { useTrackers } from "../../helpers/useTrackers";
 
 const defaultFilters: DataTableFilterMeta = {
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  name: {
+  date: {
     operator: FilterOperator.AND,
     constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
   },
-  "country.name": {
+  description: {
     operator: FilterOperator.AND,
     constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
   },
   representative: { value: null, matchMode: FilterMatchMode.IN },
-  date: {
+  timeLogged: {
     operator: FilterOperator.AND,
     constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
   },
-  balance: {
-    operator: FilterOperator.AND,
-    constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
-  },
-  status: {
-    operator: FilterOperator.OR,
-    constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
-  },
-  activity: { value: null, matchMode: FilterMatchMode.BETWEEN },
-  verified: { value: null, matchMode: FilterMatchMode.EQUALS },
 };
 
 export const History = () => {
+  const { data, getTrackers, handleEdit, handleDelete } = useTrackers();
+  useEffect(() => {
+    getTrackers();
+  }, []);
+
   const actionTemplate = (rowData: any) => {
     return (
       <React.Fragment>
-        <Button
-          icon="pi pi-pencil"
-          rounded
-          outlined
-          style={{ color: "#5F6B8A" }}
-          onClick={() => console.log(rowData)}
-        />
         <Button
           icon="pi pi-trash"
           rounded
           outlined
           style={{ color: "#5F6B8A" }}
-          onClick={() => console.log(rowData)}
+          onClick={() => handleDelete(rowData)}
         />
       </React.Fragment>
     );
   };
-  const [data, setData] = useState([
-    {
-      date: "25.02.2022",
-      description: "nesto dfrugo dsffd",
-      timeTracked: "05:02:23",
-    },
-    {
-      date: "20.02.2022",
-      description: "dfrugo dsffd",
-      timeTracked: "03:02:23",
-    },
-  ]);
   const [filters, setFilters] = useState<DataTableFilterMeta>(defaultFilters);
   const [globalFilterValue, setGlobalFilterValue] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState(null);
+
   const initFilters = () => {
     setFilters(defaultFilters);
     setGlobalFilterValue("");
@@ -83,8 +61,15 @@ export const History = () => {
     setFilters(_filters);
     setGlobalFilterValue(value);
   };
-  const clearFilter = () => {
-    initFilters();
+
+  const textEditor = (options: any) => {
+    return (
+      <InputText
+        type="text"
+        value={options.value}
+        onChange={(e) => options.editorCallback(e.target.value)}
+      />
+    );
   };
 
   return (
@@ -95,7 +80,7 @@ export const History = () => {
           fontWeight: "700",
         }}
       >
-        <p> Trackers History</p>
+        <p>Trackers History</p>
       </div>
       <br /> <br />
       <div
@@ -128,7 +113,7 @@ export const History = () => {
           <i
             className="pi pi-times"
             style={{ cursor: "pointer" }}
-            onClick={clearFilter}
+            onClick={initFilters}
           />
           <InputText
             value={globalFilterValue}
@@ -140,18 +125,38 @@ export const History = () => {
       <div className="card">
         <DataTable
           value={data}
+          dataKey="id"
           paginator
           rows={5}
-          showGridlines
+          editMode="row"
+          // showGridlines
+          onRowEditComplete={handleEdit}
           filters={filters}
           globalFilterFields={["date", "description", "timeTracked"]}
           tableStyle={{ minWidth: "50rem" }}
           paginatorClassName="custom-paginator"
         >
-          <Column field="date" header="Date"></Column>
-          <Column field="description" header="Description"></Column>
-          <Column field="timeTracked" header="Time tracker"></Column>
-          <Column header="Action" body={actionTemplate}></Column>
+          <Column
+            field="date"
+            header="Date"
+            style={{ width: "250px" }}
+          ></Column>
+          <Column
+            field="description"
+            header="Description"
+            editor={(options) => textEditor(options)}
+          ></Column>
+          <Column
+            field="timeTracked"
+            header="Time tracker"
+            style={{ width: "350px" }}
+          ></Column>
+          <Column
+            header={"Action"}
+            body={actionTemplate}
+            style={{ width: "60px" }}
+          ></Column>
+          <Column rowEditor style={{ width: "60px" }}></Column>
         </DataTable>
       </div>
     </div>

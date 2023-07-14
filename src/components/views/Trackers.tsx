@@ -1,44 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
-import { firestore } from "../../firebase.js";
-import {
-  collection,
-  getDocs,
-  updateDoc,
-  query,
-  where,
-  addDoc,
-  deleteDoc,
-} from "firebase/firestore";
 import "moment/locale/hr";
-
-interface isRunningType {
-  is: boolean;
-  dataRow: any;
-}
+import { useTrackers } from "../../helpers/useTrackers";
 
 export const Trackers = () => {
-  const [time, setTime] = useState(0);
-  const [isRunning, setIsRunning] = useState<isRunningType>({
-    is: false,
-    dataRow: {},
-  });
-  const [data, setData] = useState<any>();
+  const {
+    data,
+    getTrackers,
+    resetAll,
+    handlePlay,
+    isRunning,
+    time,
+    setTime,
+    handleEdit,
+    handleNewTimer,
+    handleDelete,
+    handleStop,
+  } = useTrackers();
   const moment = require("moment");
   moment.locale("hr");
 
   useEffect(() => {
     getTrackers();
   }, [time]);
-
-  useEffect(() => {
-    if (isRunning.is) {
-      setStopwatch(isRunning.dataRow);
-    }
-  }, [time, isRunning.is]);
 
   useEffect(() => {
     let intervalId: any;
@@ -52,170 +39,6 @@ export const Trackers = () => {
       clearInterval(intervalId);
     };
   }, [isRunning.is]);
-
-  const setStopwatch = async (dataRow: any) => {
-    try {
-      const q = query(
-        collection(firestore, "trackers"),
-        where("key", "==", dataRow.key)
-      );
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        updateDoc(doc.ref, {
-          timeLogged: moment.utc(time * 1000).format("HH:mm:ss"),
-        });
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
-
-  const getTrackers = async () => {
-    let tempData: any = [];
-    const querySnapshot = await getDocs(collection(firestore, "trackers"));
-    querySnapshot.forEach((doc) => {
-      const dataRef = doc.data();
-      tempData.push({
-        timeLogged: dataRef.timeLogged,
-        description: dataRef.description,
-        key: dataRef.key,
-      });
-    });
-    setData(tempData);
-  };
-
-  const updateNewRow = async () => {
-    try {
-      await addDoc(collection(firestore, "trackers"), {
-        timeLogged: "00:00:00",
-        description: "Bez opisa",
-        key: Math.random().toString(36),
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
-
-  const deleteRow = async (dataRow: any) => {
-    try {
-      const q = query(
-        collection(firestore, "trackers"),
-        where("key", "==", dataRow.key)
-      );
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        deleteDoc(doc.ref);
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
-
-  const stopRow = async (dataRow: any) => {
-    console.log("dataRow", dataRow);
-
-    try {
-      const q = query(
-        collection(firestore, "trackers"),
-        where("key", "==", dataRow.key)
-      );
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        updateDoc(doc.ref, {
-          timeLogged: "00:00:00",
-        });
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
-
-  const editRow = async (dataRow: any) => {
-    try {
-      const q = query(
-        collection(firestore, "trackers"),
-        where("key", "==", dataRow.data.key)
-      );
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        updateDoc(doc.ref, {
-          description: dataRow.newData.description,
-        });
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
-
-  const resetAll = async (dataRow: any) => {
-    try {
-      const q = query(collection(firestore, "trackers"));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        updateDoc(doc.ref, {
-          timeLogged: "00:00:00",
-        });
-      });
-      getTrackers();
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
-
-  const handlePlay = (rowData: any) => {
-    if (isRunning.is) {
-      setIsRunning({ is: false, dataRow: rowData });
-    } else {
-      setIsRunning({ is: true, dataRow: rowData });
-      const duration = moment.duration(rowData.timeLogged);
-      const seconds = duration.asSeconds();
-      setTime(seconds);
-    }
-  };
-
-  const handleStop = (rowData: any) => {
-    if (isRunning.is) {
-      setIsRunning({ is: false, dataRow: rowData });
-    }
-    stopRow(rowData)
-      .then(() => {
-        getTrackers();
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
-  const handleEdit = (rowData: any) => {
-    editRow(rowData)
-      .then(() => {
-        getTrackers();
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
-  const handleDelete = (rowData: any) => {
-    setTime(0);
-    deleteRow(rowData)
-      .then(() => {
-        getTrackers();
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
-  const handleNewTimer = () => {
-    updateNewRow()
-      .then(() => {
-        getTrackers();
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
 
   const actionTemplate = (rowData: any) => {
     const isSelectedRow = rowData.key === isRunning.dataRow.key;
@@ -258,7 +81,6 @@ export const Trackers = () => {
               color: "#5F6B8A",
               fontSize: "20px",
               cursor: "pointer",
-              // marginRight: "20px",
             }}
             onClick={() => handleDelete(rowData)}
           />
@@ -319,6 +141,7 @@ export const Trackers = () => {
             dataKey="id"
             paginator
             rows={5}
+            // showGridlines
             tableStyle={{ minWidth: "50rem" }}
             editMode="row"
             onRowEditComplete={handleEdit}
