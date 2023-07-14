@@ -26,14 +26,16 @@ function App() {
         const uid = user.uid;
         console.log(uid);
         setIsAuthenticated(true);
-
+        if (location.includes("login") || location.includes("register")) {
+          navigate("/trackers");
+        }
         // ...
       } else {
         // User is signed out
         // ...
         console.log("User is signed out");
         setIsAuthenticated(false);
-        if (!location.includes("register")) {
+        if (!location.includes("register") || location === "/") {
           navigate("/login");
         }
       }
@@ -47,9 +49,12 @@ function App() {
     <div>
       <Layout>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-
+          {!isAuthenticated ? (
+            <>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </>
+          ) : null}
           {isAuthenticated ? (
             <>
               <Route path="/trackers" element={<Trackers />} />
