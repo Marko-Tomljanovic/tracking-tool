@@ -8,7 +8,6 @@ import { Toast } from "primereact/toast";
 
 export const Login = () => {
   const [email, setEmail] = useState<any>("");
-  const [showToast, setShowToast] = useState<boolean>(false);
   const [password, setPassword] = useState<any>("");
   const auth = getAuth();
   const navigate = useNavigate();
@@ -20,21 +19,22 @@ export const Login = () => {
         // Signed in
         const user = userCredential.user;
         navigate("/trackers");
-        showInfo();
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode);
         console.log(errorMessage);
+        showError(errorCode);
+        showError(errorMessage);
       });
   };
 
-  const showInfo = () => {
+  const showError = (massage: string) => {
     toast.current?.show({
-      severity: "success",
-      summary: "Success",
-      detail: "You are successfully logged in",
+      severity: "error",
+      summary: "Error Massage",
+      detail: massage,
       life: 4150,
     });
   };
