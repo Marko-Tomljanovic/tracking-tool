@@ -8,6 +8,7 @@ import { Toast } from "primereact/toast";
 
 export const Login = () => {
   const [email, setEmail] = useState<any>("");
+  const [showToast, setShowToast] = useState<boolean>(false);
   const [password, setPassword] = useState<any>("");
   const auth = getAuth();
   const navigate = useNavigate();
@@ -16,10 +17,10 @@ export const Login = () => {
   const handleSubmit = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        showInfo();
         // Signed in
         const user = userCredential.user;
         navigate("/trackers");
+        showInfo();
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -33,8 +34,8 @@ export const Login = () => {
     toast.current?.show({
       severity: "success",
       summary: "Success",
-      detail: "Message Content",
-      life: 4000,
+      detail: "You are successfully logged in",
+      life: 4150,
     });
   };
 
@@ -135,6 +136,7 @@ export const Login = () => {
           </div>
         </Card>
       </div>
+      <Toast ref={toast} position="bottom-left" />
     </div>
   );
 };
