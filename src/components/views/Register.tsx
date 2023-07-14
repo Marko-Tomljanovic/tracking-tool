@@ -13,10 +13,12 @@ export const Register = () => {
   const toast = useRef<Toast>(null);
 
   const handleSubmit = () => {
+    if (password !== rePassword) {
+      showError("Passwords must match!");
+    }
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
-        showInfo();
         const user = userCredential.user;
       })
       .catch((error) => {
@@ -24,14 +26,15 @@ export const Register = () => {
         const errorMessage = error.message;
         console.log(errorCode);
         console.log(errorMessage);
+        showError(errorCode);
       });
   };
-  const showInfo = () => {
+  const showError = (massage: string) => {
     toast.current?.show({
-      severity: "success",
-      summary: "Success",
-      detail: "Message Content",
-      life: 4000,
+      severity: "error",
+      summary: "Error Massage",
+      detail: massage,
+      life: 4150,
     });
   };
 
@@ -142,6 +145,7 @@ export const Register = () => {
             <a></a>
           </div>
         </Card>
+        <Toast ref={toast} position="bottom-left" />
       </div>
     </div>
   );
