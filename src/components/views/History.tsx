@@ -18,7 +18,6 @@ const defaultFilters: DataTableFilterMeta = {
     operator: FilterOperator.AND,
     constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
   },
-  representative: { value: null, matchMode: FilterMatchMode.IN },
   timeLogged: {
     operator: FilterOperator.AND,
     constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],

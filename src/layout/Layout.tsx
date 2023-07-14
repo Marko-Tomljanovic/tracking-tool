@@ -1,16 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import MainNavigation from "../components/navigation/MainNavigation";
 
 const Layout = ({ children }: any) => {
-  //   useEffect(() => {
-  //     axiosInstancePortal
-  //       .get("/info")
-  //       .then((result) => {
-  //         setPortalVerzija(result.data.verzija);
-  //       })
-  //       .catch(() => {});
-  //   }, []);
-
   return (
     <React.Fragment>
       <div>

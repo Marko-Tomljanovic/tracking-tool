@@ -19,7 +19,11 @@ function App() {
       if (user) {
         const uid = user.uid;
         setIsAuthenticated(true);
-        if (location.includes("login") || location.includes("register")) {
+        if (
+          location.includes("login") ||
+          location.includes("register") ||
+          location === "/"
+        ) {
           navigate("/trackers");
         }
       } else {
